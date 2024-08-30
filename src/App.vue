@@ -168,7 +168,10 @@ export default {
 
     const updateTitle = (index, newTitle) => {
       const oldTitle = columns.value[index];
-      if (newTitle && !columns.value.includes(newTitle)) {
+      if (
+        newTitle &&
+        !columns.value.filter((value) => value !== oldTitle).includes(newTitle)
+      ) {
         columns.value[index] = newTitle;
 
         tasks.value.forEach((task) => {
