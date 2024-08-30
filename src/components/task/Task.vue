@@ -1,8 +1,8 @@
 <template>
   <div class="task">
-    {{ task.title }}
+    <h3>{{ task.title }}</h3>
     <ProgressBar :value="task.completion_percentage" />
-    {{ timeAgo }}
+    <span class="time-ago">{{ timeAgo }}</span>
   </div>
 </template>
 

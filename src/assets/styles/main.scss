@@ -5,8 +5,12 @@
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    button {
+    .add-column {
       height: fit-content;
+      border:none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 20px;
     }
   }
 }

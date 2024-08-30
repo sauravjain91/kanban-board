@@ -8,9 +8,12 @@
         :key="index"
         :title="column"
         :tasks="getTasksForColumn(column)"
+        :showCreateTaskButton="index === 0"
         @move-task="moveTask"
+        @create-task="createTask"
+        @update-title="updateTitle(index, $event)"
       />
-      <button @click="addColumn">+</button>
+      <button @click="addColumn" class="add-column">+</button>
     </div>
   </div>
 </template>
@@ -27,93 +30,99 @@ export default {
 
     const tasks = ref([
       {
-        title: "Case 1",
+        title: "Design Homepage",
         status: "DONE",
-        updated_at: "2021-09-01",
+        updated_at: "2024-08-01T14:23:00Z",
         completion_percentage: 100,
       },
       {
-        title: "Case 2",
+        title: "Implement Authentication",
         status: "ARCHIVED",
-        updated_at: "2021-09-02",
+        updated_at: "2024-07-20T09:15:30Z",
         completion_percentage: 100,
       },
       {
-        title: "Case 3",
+        title: "Fix Bugs in API",
         status: "IN PROGRESS",
-        updated_at: new Date(),
+        updated_at: "2024-08-15T11:42:10Z",
+        completion_percentage: 60,
+      },
+      {
+        title: "Update Documentation",
+        status: "TODO",
+        updated_at: "2024-08-17T16:25:05Z",
+        completion_percentage: 10,
+      },
+      {
+        title: "Review Pull Requests",
+        status: "TODO",
+        updated_at: "2024-08-18T13:07:20Z",
+        completion_percentage: 20,
+      },
+      {
+        title: "Optimize Database Queries",
+        status: "TODO",
+        updated_at: "2024-08-20T10:50:45Z",
+        completion_percentage: 30,
+      },
+      {
+        title: "Add User Analytics",
+        status: "TODO",
+        updated_at: "2024-08-21T08:22:15Z",
+        completion_percentage: 25,
+      },
+      {
+        title: "Implement Payment Gateway",
+        status: "TODO",
+        updated_at: "2024-08-22T15:11:55Z",
+        completion_percentage: 40,
+      },
+      {
+        title: "Create Admin Dashboard",
+        status: "TODO",
+        updated_at: "2024-08-23T17:30:30Z",
         completion_percentage: 50,
       },
       {
-        title: "Case 4",
+        title: "Conduct User Testing",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
+        updated_at: "2024-08-24T14:45:10Z",
+        completion_percentage: 60,
       },
       {
-        title: "Case 5",
+        title: "Refactor Codebase",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 15,
+        updated_at: "2024-08-25T12:12:55Z",
+        completion_percentage: 70,
       },
       {
-        title: "Case 6",
+        title: "Prepare Release Notes",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
+        updated_at: "2024-08-26T11:35:45Z",
+        completion_percentage: 80,
       },
       {
-        title: "Case 7",
+        title: "Deploy to Production",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
+        updated_at: "2024-08-27T09:50:25Z",
+        completion_percentage: 90,
       },
       {
-        title: "Case 8",
+        title: "Post-Deployment Testing",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
+        updated_at: "2024-08-28T14:30:10Z",
+        completion_percentage: 85,
       },
       {
-        title: "Case 9",
+        title: "Fix Post-Deployment Bugs",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
+        updated_at: "2024-08-29T10:15:40Z",
+        completion_percentage: 40,
       },
       {
-        title: "Case 10",
+        title: "Project Retrospective",
         status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
-      },
-      {
-        title: "Case 11",
-        status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 10,
-      },
-      {
-        title: "Case 12",
-        status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 0,
-      },
-      {
-        title: "Case 13",
-        status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 0,
-      },
-      {
-        title: "Case 14",
-        status: "TODO",
-        updated_at: new Date(),
-        completion_percentage: 0,
-      },
-      {
-        title: "Case 15",
-        status: "TODO",
-        updated_at: new Date(),
+        updated_at: "2024-08-30T16:00:00Z",
         completion_percentage: 0,
       },
     ]);
@@ -128,6 +137,24 @@ export default {
       }
     };
 
+    const createTask = (status) => {
+      const newTaskName = prompt("Enter the name of the new Task:");
+      if (newTaskName === null || newTaskName.trim() === "") return;
+
+      if (tasks.value.some((task) => task.title === newTaskName)) {
+        alert("A task with this name already exists.");
+        return;
+      }
+
+      const newTask = {
+        title: newTaskName,
+        status: status,
+        updated_at: new Date(),
+        completion_percentage: 0,
+      };
+      tasks.value.push(newTask);
+    };
+
     const addColumn = () => {
       const newColumn = prompt(
         "Enter the name of the new column:"
@@ -139,12 +166,29 @@ export default {
       }
     };
 
+    const updateTitle = (index, newTitle) => {
+      const oldTitle = columns.value[index];
+      if (newTitle && !columns.value.includes(newTitle)) {
+        columns.value[index] = newTitle;
+
+        tasks.value.forEach((task) => {
+          if (task.status === oldTitle) {
+            task.status = newTitle;
+          }
+        });
+      } else {
+        alert("Column name is invalid or already exists.");
+      }
+    };
+
     return {
       columns,
       tasks,
       getTasksForColumn,
       moveTask,
-      addColumn,
+      addColumn, createTask,
+
+      updateTitle,
     };
   },
 };

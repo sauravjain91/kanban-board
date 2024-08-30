@@ -1,7 +1,13 @@
 .task {
-    background: white;
-    padding: 8px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  h3 {
+    color: #929292;
+  }
+  .time-ago {
+    font-size: 10px;
+  }
 }
