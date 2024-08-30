@@ -14,7 +14,8 @@
         v-show="isEditing"
         type="text"
         v-model="editTitle"
-        @keyup.enter="stopEditing"
+        @keyup.enter="saveTitle"
+        @keyup.esc="stopEditing"
         ref="titleInput"
       />
     </div>
@@ -80,10 +81,15 @@ export default {
       }
     };
 
-    const stopEditing = () => {
+    const saveTitle = () => {
       if (editTitle.value !== props.title) {
         emit("update-title", editTitle.value.toUpperCase());
       }
+      isEditing.value = false;
+    };
+
+    const stopEditing = () => {
+      editTitle.value = props.title;
       isEditing.value = false;
     };
 
@@ -93,6 +99,7 @@ export default {
       editIcon,
       createTask,
       startEditing,
+      saveTitle,
       stopEditing,
       isEditing,
       editTitle,
