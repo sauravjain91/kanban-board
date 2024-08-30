@@ -186,8 +186,8 @@ export default {
       tasks,
       getTasksForColumn,
       moveTask,
-      addColumn, createTask,
-
+      addColumn,
+      createTask,
       updateTitle,
     };
   },
