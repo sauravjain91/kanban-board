@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <div class="list-header">
-      <div v-if="!isEditing" class="read-only">
+      <div v-show="!isEditing" class="read-only">
         <h2>{{ title }}</h2>
         <img
           :src="editIcon"
@@ -11,10 +11,11 @@
         />
       </div>
       <input
-        v-if="isEditing"
+        v-show="isEditing"
         type="text"
         v-model="editTitle"
         @keyup.enter="stopEditing"
+        ref="titleInput"
       />
     </div>
 
@@ -39,7 +40,7 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import draggable from "vuedraggable";
 import Task from "../task/Task.vue";
 import editIcon from "@/assets/icons/edit.svg"; // Import SVG here
@@ -53,6 +54,7 @@ export default {
     const localTasks = ref([...props.tasks]);
     const isEditing = ref(false);
     const editTitle = ref(props.title);
+    const titleInput = ref(null);
 
     watch(
       () => props.tasks,
@@ -69,9 +71,13 @@ export default {
       emit("create-task", props.title);
     };
 
-    const startEditing = () => {
+    const startEditing = async () => {
       isEditing.value = true;
       editTitle.value = props.title;
+      await nextTick();
+      if (titleInput.value) {
+        titleInput.value.focus();
+      }
     };
 
     const stopEditing = () => {
@@ -90,6 +96,7 @@ export default {
       stopEditing,
       isEditing,
       editTitle,
+      titleInput,
     };
   },
 };
