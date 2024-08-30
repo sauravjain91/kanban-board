@@ -1,6 +1,9 @@
 # kanban-board
 
-## Project setup
+### Demo
+You can view a live demo of the Kanban Board application at: https://kanban-board-saurav.netlify.app/
+
+## To get started with this project, follow these steps:
 ```
 yarn install
 ```
