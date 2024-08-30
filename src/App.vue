@@ -129,7 +129,9 @@ export default {
     };
 
     const addColumn = () => {
-      const newColumn = prompt("Enter the name of the new column:").toUpperCase();
+      const newColumn = prompt(
+        "Enter the name of the new column:"
+      ).toUpperCase();
       if (newColumn && !columns.value.includes(newColumn)) {
         columns.value.push(newColumn);
       } else {
