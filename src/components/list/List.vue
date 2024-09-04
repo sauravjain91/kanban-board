@@ -2,12 +2,20 @@
   <div class="list">
     <div class="list-header">
       <div v-show="!isEditing" class="read-only">
-        <h2>{{ title }}</h2>
+        <div>
+          <h2>{{ title }}</h2>
+          <img
+            :src="editIcon"
+            alt="Edit Icon"
+            @click="startEditing"
+            class="edit-icon"
+          />
+        </div>
         <img
-          :src="editIcon"
-          alt="Edit Icon"
-          @click="startEditing"
-          class="edit-icon"
+          :src="deleteIcon"
+          alt="Delete Icon"
+          @click="deleteColumn"
+          class="delete-icon"
         />
       </div>
       <input
@@ -23,9 +31,9 @@
     <draggable
       v-model="localTasks"
       :group="{ name: 'tasks', pull: true, put: true }"
-      @end="onTaskMoved"
-      item-key="title"
+      item-key="columnId"
       class="tasks"
+      @change="onTaskMoved"
     >
       <template #item="{ element }">
         <Task :task="element" />
@@ -44,12 +52,13 @@
 import { ref, watch, nextTick } from "vue";
 import draggable from "vuedraggable";
 import Task from "../task/Task.vue";
-import editIcon from "@/assets/icons/edit.svg"; // Import SVG here
+import editIcon from "@/assets/icons/edit.svg";
+import deleteIcon from "@/assets/icons/delete.svg";
 
 export default {
   name: "List",
   components: { draggable, Task },
-  props: ["title", "tasks", "showCreateTaskButton"],
+  props: ["title", "tasks", "showCreateTaskButton", "columnId"],
 
   setup(props, { emit }) {
     const localTasks = ref([...props.tasks]);
@@ -65,11 +74,12 @@ export default {
     );
 
     const onTaskMoved = (event) => {
-      emit("move-task", event.item, props.title);
+      if (!event.added) return;
+      emit("move-task", event.added.element, props.columnId);
     };
 
     const createTask = () => {
-      emit("create-task", props.title);
+      emit("create-task");
     };
 
     const startEditing = async () => {
@@ -79,6 +89,10 @@ export default {
       if (titleInput.value) {
         titleInput.value.focus();
       }
+    };
+
+    const deleteColumn = () => {
+      emit("delete-column");
     };
 
     const saveTitle = () => {
@@ -104,6 +118,8 @@ export default {
       isEditing,
       editTitle,
       titleInput,
+      deleteIcon,
+      deleteColumn,
     };
   },
 };

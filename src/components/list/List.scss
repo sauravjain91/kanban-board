@@ -16,11 +16,24 @@
     z-index: 10;
     box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
     font-style: serif;
+    width: 100%;
     .read-only {
       display: flex;
       align-items: center;
       column-gap: 16px;
-      .edit-icon {
+      justify-content: space-between;
+      div {
+        display: flex;
+        column-gap: 16px;
+        .edit-icon {
+          width: 24px;
+          display: block;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+      .delete-icon {
         width: 24px;
         display: block;
         &:hover {
