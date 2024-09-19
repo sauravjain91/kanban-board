@@ -33,7 +33,6 @@
       :group="{ name: 'tasks', pull: true, put: true }"
       item-key="columnId"
       class="tasks"
-      @change="onTaskMoved"
     >
       <template #item="{ element }">
         <Task :task="element" />
@@ -49,7 +48,7 @@
 </template>
 
 <script>
-import { ref, watch, nextTick } from "vue";
+import { ref, nextTick, computed } from "vue";
 import draggable from "vuedraggable";
 import Task from "../task/Task.vue";
 import editIcon from "@/assets/icons/edit.svg";
@@ -61,25 +60,24 @@ export default {
   props: ["title", "tasks", "showCreateTaskButton", "columnId"],
 
   setup(props, { emit }) {
-    const localTasks = ref([...props.tasks]);
+    const localTasks = computed({
+      // getter
+      get() {
+        return props.tasks;
+      },
+      // setter
+      set(tasks) {
+        // Note: we are using destructuring assignment syntax here.
+        emit("move-task", props.columnId, tasks);
+      },
+    });
+
     const isEditing = ref(false);
     const editTitle = ref(props.title);
     const titleInput = ref(null);
 
-    watch(
-      () => props.tasks,
-      (newTasks) => {
-        localTasks.value = [...newTasks];
-      }
-    );
-
-    const onTaskMoved = (event) => {
-      if (!event.added) return;
-      emit("move-task", event.added.element, props.columnId);
-    };
-
     const createTask = () => {
-      emit("create-task");
+      emit("create-task", props.columnId);
     };
 
     const startEditing = async () => {
@@ -92,12 +90,12 @@ export default {
     };
 
     const deleteColumn = () => {
-      emit("delete-column");
+      emit("delete-column", props.columnId);
     };
 
     const saveTitle = () => {
       if (editTitle.value !== props.title) {
-        emit("update-title", editTitle.value.toUpperCase());
+        emit("update-title", props.columnId, editTitle.value.toUpperCase());
       }
       isEditing.value = false;
     };
@@ -109,7 +107,6 @@ export default {
 
     return {
       localTasks,
-      onTaskMoved,
       editIcon,
       createTask,
       startEditing,
